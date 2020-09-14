@@ -77,14 +77,14 @@ let match ;
       match = {
         date: {$gte:new Date(lowerLimit) ,$lte: new Date(upperLimit)},
         status:"Recovered",
-        gender:gender ,
+        // gender:gender ,
         state:state
       }
     }else{
        match = {
         date: {$gte:new Date(lowerLimit) ,$lte: new Date(upperLimit)},
         status:"Recovered",
-        gender:gender
+        // gender:gender
       }
     }
    
@@ -112,7 +112,10 @@ Patients.aggregate([
 
     }
   },
-
+  {
+    $match:match
+  }
+,
 {
  
   $match:{

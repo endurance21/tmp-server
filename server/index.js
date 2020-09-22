@@ -30,21 +30,10 @@ app.use(function(req, res, next) {
 })
 
 
-
-app.get('/hello',(req,res,next)=>{
-
-  res.send("hey there ! , how are you MR DIVYANSHU")
-  
-})
-
-
-
-
 app.post('/api/patients' , handle) ;
 
 
 function handle(req, res , next ){
-  console.log("hello")
   let {state , gender , age_group , date_range} = req.body;
 
   let lowerAge = age_group[0]
@@ -77,23 +66,19 @@ let match ;
       match = {
         date: {$gte:new Date(lowerLimit) ,$lte: new Date(upperLimit)},
         status:"Recovered",
-        // gender:gender ,
         state:state
       }
     }else{
        match = {
         date: {$gte:new Date(lowerLimit) ,$lte: new Date(upperLimit)},
         status:"Recovered",
-        // gender:gender
       }
     }
    
   }
 
 
-
-
-
+//using mongoose aggregate 
 Patients.aggregate([
   {
     $project: {
@@ -107,9 +92,6 @@ Patients.aggregate([
       state:"$state",
       age: "$ageEstimate",
       status:"$status",
-    
-      
-
     }
   },
   {
@@ -134,8 +116,6 @@ Patients.aggregate([
 {
   $sort:{_id:1}
 }
-
-
 ] 
 ).exec((err, result)=>{
   if(err){
@@ -144,64 +124,7 @@ Patients.aggregate([
   res.json(result);
   next()
 })
-
-
-
-
-
-
 }
-
-
-
-// let gender
-// let lowerLimit = "2020-30-01"
-
-// // let upperLimit = "2020-03-04"
-
-// let lowerLimit = date_range[0]
-
-// let upperLimit = date_range[1]
-
-// Patients.aggregate([
-//   {
-//     $project: {
-//       date: {
-//         $dateFromString: {
-//           dateString: "$reportedOn",
-//           format: "%d/%m/%Y"
-//         }
-//       },
-//       gender:"$gender",
-//       state:"$state",
-//       age:"$ageEstimate",
-//       status:"$status"
-
-//     }
-//   },
-//   {
-//     $match:{
-//       date: {$gte:new Date(lowerLimit) ,$lte: new Date(upperLimit)},
-//       status:"Recovered",
-//       gender:gender
-  
-//     }
-// },
-
-
-
-
-// ] 
-// ).exec((err, result)=>{
-//   console.log(result)
-//   // if(err){
-//   //   res.status(400);
-//   // }
-//   // res.json(result);
-//   // next()
-// })
-
-
 
 
 
